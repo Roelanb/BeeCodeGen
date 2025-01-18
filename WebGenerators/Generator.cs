@@ -43,6 +43,13 @@ public class Generator
             new TsconfigappGenerator(_db),
             new IndexHtmlGenerator(_db),
             new EsLintconfigGenerator(_db),
+            new MainTsxGenerator(_db),
+            new RouterTsxGenerator(_db),
+            new AppTsxGenerator(_db),
+            new AppCssGenerator(_db),
+            new IndexCssGenerator(_db),
+            new ThemeTsGenerator(_db),
+
         };
     }
 
@@ -74,4 +81,3 @@ public class Generator
 
     }
 }
-
