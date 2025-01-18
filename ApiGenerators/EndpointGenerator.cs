@@ -3,7 +3,7 @@ using Dapper;
 using Npgsql;
 using System.IO;
 
-namespace CodeGen.Generators;
+namespace CodeGen.ApiGenerators;
 
 public class EndpointGenerator : BaseGenerator, IFileGenerator
 {

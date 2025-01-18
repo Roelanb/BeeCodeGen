@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Npgsql;
 
-namespace CodeGen.Generators;
+namespace CodeGen.ApiGenerators;
 
 public class HttpTestFileGenerator : BaseGenerator, IFileGenerator
 {

@@ -1,7 +1,7 @@
 using System.IO;
 using Npgsql;
 
-namespace CodeGen.Generators;
+namespace CodeGen.ApiGenerators;
 
 public class CreateFeatureGenerator : BaseGenerator
 {

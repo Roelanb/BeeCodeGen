@@ -6,11 +6,18 @@ using System.Linq;
 using Npgsql;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using CodeGen.Generators;
+using CodeGen.ApiGenerators;
 using System.ComponentModel;
 
 namespace CodeGen
 {
+    enum OutputType
+    {
+        DataApi = 1,
+        WebSite = 2,
+        Exit = 3
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -21,6 +28,27 @@ namespace CodeGen
             AnsiConsole.Write(new Markup($"[bold]Version:[/] {typeof(Program).Assembly.GetName().Version}"));
             AnsiConsole.WriteLine();
             AnsiConsole.WriteLine();
+
+
+            var outputTable = new Table();
+            outputTable.AddColumn("Output");
+            outputTable.AddRow("1. Data API");
+            outputTable.AddRow("2. Web Site");
+            outputTable.AddRow("3. Exit");
+
+            AnsiConsole.Write(outputTable);
+
+            var outputSelection = int.Parse(Console.ReadLine() ?? "1");
+
+            if (outputSelection == 3) return;
+
+            var outputType = OutputType.DataApi;
+
+            if (outputSelection == (int)OutputType.WebSite)
+            {
+                outputType = OutputType.WebSite;
+            }
+
 
             // Configuration
             var builder = new ConfigurationBuilder()
@@ -37,7 +65,7 @@ namespace CodeGen
                 throw new InvalidOperationException("No connection strings found in the appsettings.json or user secrets.");
             }
 
-            AnsiConsole.Write(new Markup("[bold]Available conenction strings:[/]"));
+            AnsiConsole.Write(new Markup("[bold]Available connection strings:[/]"));
             AnsiConsole.WriteLine();
 
             var connectionStringTable = new Table();
@@ -118,7 +146,13 @@ namespace CodeGen
 
             AnsiConsole.Write(tableTable);
 
+            // path where the api will be generated
+            var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "DataApiGenerated");
+
+
             var tableIndex = int.Parse(Console.ReadLine() ?? "1") - 1;
+
+
 
             if (tableIndex == tables.Count + 1)
             {
@@ -128,7 +162,6 @@ namespace CodeGen
             else if (tableIndex == tables.Count)
             {
 
-                var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "DataApi");
 
                 AnsiConsole.Progress()
                     .Start(ctx =>
@@ -144,7 +177,7 @@ namespace CodeGen
                         {
                             foreach (var table in tables)
                             {
-                                var generator = new Generator(tasks[table], deepSeekApiKey, selectedConnectionString!, selectedSchema, table, outputPath);
+                                var generator = new ApiGenerators.Generator(tasks[table], deepSeekApiKey, selectedConnectionString!, selectedSchema, table, outputPath);
                                 generator.Generate();
                             }
                         }
@@ -159,11 +192,18 @@ namespace CodeGen
                         var selectedTable = tables[tableIndex];
                         var task = ctx.AddTask($"[green]Generating API for {selectedTable}[/]");
 
-                        var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "DataApi");
+                        switch (outputType)
+                        {
+                            case OutputType.DataApi:
+                                var generator = new ApiGenerators.Generator(task, deepSeekApiKey, selectedConnectionString!, selectedSchema, selectedTable, outputPath);
+                                generator.Generate();
+                                break;
+                            case OutputType.WebSite:
+                                var generatorWeb = new WebGenerators.Generator(task, deepSeekApiKey, selectedConnectionString!, selectedSchema, selectedTable, outputPath);
+                                generatorWeb.Generate();
+                                break;
 
-
-                        var generator = new Generator(task, deepSeekApiKey, selectedConnectionString, selectedSchema, selectedTable, outputPath);
-                        generator.Generate();
+                        }
                     });
             }
 

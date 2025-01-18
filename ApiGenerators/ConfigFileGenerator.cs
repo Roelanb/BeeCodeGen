@@ -1,5 +1,5 @@
 
-namespace CodeGen.Generators
+namespace CodeGen.ApiGenerators
 {
     public class ConfigFileGenerator : IFileGenerator
     {

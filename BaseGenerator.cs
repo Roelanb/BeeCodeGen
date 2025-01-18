@@ -3,7 +3,7 @@ using Npgsql;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeGen.Generators;
+namespace CodeGen;
 
 public abstract class BaseGenerator
 {

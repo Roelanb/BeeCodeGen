@@ -3,7 +3,7 @@ using Npgsql;
 using System.IO;
 using System.Text;
 
-namespace CodeGen.Generators;
+namespace CodeGen.ApiGenerators;
 
 public class SqlScriptGenerator : IFileGenerator
 {

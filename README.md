@@ -50,3 +50,10 @@ BeeCodeGen is a C# application designed to streamline the process of generating 
 2. Configure your `appsettings.json` and `appsettings.Development.json` files
 3. Build and run the application
 4. The application will generate code based on your database schema and configuration
+
+## Future Improvements
+
+- Add a full testing approach to test out the generated code
+- Add support for other database types
+- Add support for other code generation frameworks
+- Add support for more advanced features, such as code generation for specific endpoints or custom configurations

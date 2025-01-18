@@ -8,11 +8,10 @@ global using System.ComponentModel.DataAnnotations;
 global using System.ComponentModel.DataAnnotations.Schema;
 global using Npgsql;
 global using Dapper;
-global using CodeGen.Generators;
 using Spectre.Console;
 using System.Net.NetworkInformation;
 
-namespace CodeGen
+namespace CodeGen.ApiTesterGenerators
 {
     public class Generator
     {
@@ -37,20 +36,14 @@ namespace CodeGen
 
             _generators = new List<IFileGenerator>
             {
-                new ProjectFileGenerator(),
-                new ProgramFileGenerator(_db),
-                new GlobalUsingsFileGenerator(_db),
-                new LaunchSettingsFileGenerator(_db),
-                new EndpointGenerator(_deepSeekApiKey, _db, _schema, _tableName),
-                new ConfigFileGenerator(_connectionString),
-                new SqlScriptGenerator(_schema, _tableName, _db),
-                new DeepSeekMarkdownGenerator(_deepSeekApiKey, _db, _schema, _tableName),          };
+
+            };
         }
 
         public void Generate()
         {
             var appName = "PlantApi";
-            var projectPath = _outputPath;
+            var projectPath = _outputPath + "/DataApi";
 
             _taskProgress.Increment(10);
             // Create project structure

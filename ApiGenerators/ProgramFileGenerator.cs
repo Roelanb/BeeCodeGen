@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace CodeGen.Generators;
+namespace CodeGen.ApiGenerators;
 
 public class ProgramFileGenerator : BaseGenerator, IFileGenerator
 {
@@ -32,12 +32,24 @@ builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument();
 builder.Services.AddAuthorization();
 
+// Add CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(""http://localhost:5173"")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Add PostgreSQL connection
 builder.Services.AddScoped(_ => new NpgsqlConnection(builder.Configuration.GetConnectionString(""DefaultConnection"")));
 
 var app = builder.Build();
 
 app.UseAuthorization();
+app.UseCors();
 app.UseFastEndpoints();
 app.UseOpenApi();
 app.UseSwaggerUI();
